@@ -22,37 +22,36 @@
     <!-- endbuild -->
   </head>
   <body>
+    <div class="box">
+<textarea class="input">
+</textarea>
+    <button>add</button>
 
-    <div class="hero-unit">
-      <h1>'Allo, 'Allo!</h1>
-      <p>You now have</p>
-      <ul>
-        <li>HTML5 Boilerplate</li>
-        <li>Normalize CSS</li>
-
-        <li>Sass</li>
+  <ul class="toDoItems">
+  </ul>
 
 
-        <li>Modernizr</li>
+  <ul class="response"></ul>
+</div>
 
 
-        <li>Bourbon & Neat</li>
 
 
-        <li>UnderscoreJS</li>
 
-      </ul>
-      <p>Don't forget to update your readme file!!</p>
-    </div>
+
+
 
     <!-- build:js scripts/vendor.js -->
     <!-- bower:js -->
     <script src="../bower_components/jquery/dist/jquery.js"></script>
     <script src="../bower_components/underscore/underscore.js"></script>
+    <script src="../bower_components/handlebars/handlebars.min.js"></script>
+
     <!-- endbower -->
     <!-- endbuild -->
 
         <!-- build:js scripts/main.js -->
+        <script src="scripts/templates.js"></script>
         <script src="scripts/main.js"></script>
         <!-- endbuild -->
 </body>
