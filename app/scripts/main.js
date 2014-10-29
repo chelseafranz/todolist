@@ -1,66 +1,86 @@
-var ToDo = function  (options) {
-	options= options || {};
-this.status=  options.status ||'incomplete';
-this.active=  true;
-this.delete= function(){
-this.active= false;
-};
-this.check= function(){
-	this.status='complete'
-	};
-this.count= 1;
+var my_server= 'http://tiy-atl-fe-server.herokuapp.com/collections/chelseaandjoanna2';
+
+var ToDo= function (options) {
+	options= options||{};
+	this.done= 'false';
+	this.task=options.task || '';
+
 };
 
-var totalItems=[];
+var todo_list;
 
+var task_template= $('#task_items').html();
+var rendered = _.template(task_template);
 
+$.getJSON(my_server).done( function(data){
 
-var item = new ToDo({
+	todo_list = data;
 
+	_.each(todo_list, function(item){
+
+		$('todoitems', 'todo_list').append(rendered(item));
+	});
 });
 
-var checkForComplete= function(){
-if(item.status = 'incomplete'){
-		notDone.push(1);
-		console.log(notDone.length);
-		$('.notdone').html(notDone.length);
-}else {
-	done.push(1);
-	console.log(done.length);
-	$('.done').html(done.length);
-}
-};
-
-var buttons='<button class="delete">x</button>' + '<button class="done">:)</button>'+ '<button class="notDone">:(</button>';
-var listItem;
-
+var task, contents;
 
 $('#button').on('click', function(event){
-	listItem= $('.input').val();
-		event.preventDefault;	
-		console.log(listItem);
-	$('.toDoItems').append('<li class="newItem">' + listItem + buttons +'</li>');
-		totalItems.push(listItem.cout);
-	$('.count').html(totalItems.length);
- });
+event.preventDefault();
+var self=this;
+contents = $('.input').val()+ '<button id= "away">x</button>';
 
+task= new ToDo({
+	task: contents
+});
+console.log(task);
 
-$('.toDoItems').on('click', '.delete', function(){
+$.ajax({
+	type: 'POST',
+	url: my_server,
+	data: task
+}).done( function(data){
+
+	todo_list.push(data);
+
+	$('.toDoItems').append(rendered(data));
+
+	$('.input').val('');
+});
+
+$('ul').on('click', '#away', function(){
 	$(this).parent().remove();
-		totalItems.splice(1,1);
-	$('.count').html(totalItems.length);
 });
 
-$('.toDoItems').on('click', '.done', function(){
-	item.status='complete';
-	console.log(item.status);
 });
 
-$('.toDoItems').on('click', '.notDone', function(){
-	item.status='incomplete';
-	console.log(item.status);
-});
 
+
+var todo_modifier;
+$('.toDoItems').on('click', 'li', function(event){
+	event.preventDefault();
+
+var myID= $(this).attr('id');
+
+todo_modifier=_.findWhere(todo_list, {_id: myID});
+	
+	if(todo_modifier.done ==='true'){
+		todo_modifier.done = 'false';
+		$(this).removeClass('completed');
+	}
+	else{
+		todo_modifier.done ='true';
+
+		$(this).addClass('completed');	
+	}
+	console.log(todo_modifier);
+
+
+$.ajax({
+	type: 'PUT',
+	url: my_server + "/" + todo_modifier._id,
+	data:todo_modifier,
+})
+});
 
 
 
